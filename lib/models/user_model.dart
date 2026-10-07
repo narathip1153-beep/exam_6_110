@@ -6,7 +6,8 @@ class UserModel {
 
   UserModel({required this.uid, required this.name, required this.email, required this.role});
 
-  bool get isAdmin => role == 'admin';
+  // ไม่สนตัวพิมพ์เล็ก/ใหญ่ และตัดช่องว่าง เช่น "Admin", "admin " ก็ถือเป็น admin
+  bool get isAdmin => role.trim().toLowerCase() == 'admin';
 
   Map<String, dynamic> toMap() => {'uid': uid, 'name': name, 'email': email, 'role': role};
 

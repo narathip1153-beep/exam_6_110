@@ -17,3 +17,17 @@
 
 บัญชีทดสอบ: ครั้งแรกที่ล็อกอิน ระบบจะสร้างเอกสารใน collection `users` (uid, name, email, role) ให้อัตโนมัติ
 admin@test.com = admin, ที่เหลือ = operator
+
+
+## รันบนเว็บ (Flutter Web)
+1. `flutter create . --platforms=web,android`
+2. Firebase Console -> Project settings -> Your apps -> Add app -> Web (</>) -> คัดลอก firebaseConfig
+   ไปใส่ใน `lib/firebase_options_web.dart`
+3. Authentication -> Settings -> Authorized domains: ต้องมี `localhost` (มีให้อยู่แล้วโดยปกติ)
+4. รันทดสอบ: `flutter run -d chrome`
+5. สร้างไฟล์เว็บ: `flutter build web` (ผลลัพธ์อยู่ใน build/web)
+   ใช้ Firebase Hosting ได้: `firebase init hosting` (public = build/web) แล้ว `firebase deploy`
+
+## การแก้ไขข้อมูล (Admin)
+ปุ่มดินสอ (Edit) ในแท็บรายการ -> หน้าแก้ไขทุกช่อง (รวมชั่วโมงเดินทางและเส้นทาง) -> กด "อัปเดต"
+Operator จะไม่เห็นปุ่ม Edit/Delete

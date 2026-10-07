@@ -11,9 +11,13 @@ class ContainerForm extends StatefulWidget {
   State<ContainerForm> createState() => _ContainerFormState();
 }
 
-class _ContainerFormState extends State<ContainerForm> {
+class _ContainerFormState extends State<ContainerForm> with AutomaticKeepAliveClientMixin {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _id, _product, _email, _temp, _hours;
+  late final TextEditingController _id, _product, _email, _temp, _hours, _route;
+
+  // เก็บสถานะฟอร์มไว้เมื่อสลับแท็บ
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -24,6 +28,7 @@ class _ContainerFormState extends State<ContainerForm> {
     _email = TextEditingController(text: e?.qaEmail ?? '');
     _temp = TextEditingController(text: e?.upperTempLimit.toString() ?? '');
     _hours = TextEditingController(text: e?.remainingHours.toString() ?? '');
+    _route = TextEditingController(text: e?.route ?? '');
   }
 
   String? _numberValidator(String? v, String label) {
@@ -41,12 +46,13 @@ class _ContainerFormState extends State<ContainerForm> {
       qaEmail: _email.text.trim(),
       upperTempLimit: double.parse(_temp.text.trim()),
       remainingHours: double.parse(_hours.text.trim()),
+      route: _route.text.trim(),
     );
     try {
       if (widget.existing == null) {
         await ContainerController.add(c);
         _formKey.currentState!.reset();
-        for (final t in [_id, _product, _email, _temp, _hours]) {
+        for (final t in [_id, _product, _email, _temp, _hours, _route]) {
           t.clear();
         }
       } else {
@@ -65,6 +71,7 @@ class _ContainerFormState extends State<ContainerForm> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // จำเป็นสำหรับ AutomaticKeepAliveClientMixin
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Form(
@@ -113,6 +120,14 @@ class _ContainerFormState extends State<ContainerForm> {
               if (double.parse(v!.trim()) < 0) return 'ชั่วโมงต้องไม่ติดลบ';
               return null;
             },
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _route,
+            decoration: const InputDecoration(
+                labelText: 'เส้นทางขนส่ง (Route) - ไม่บังคับ',
+                hintText: 'เช่น Bangkok -> Chiang Mai',
+                border: OutlineInputBorder()),
           ),
           const SizedBox(height: 20),
           SizedBox(

@@ -1,7 +1,8 @@
-import 'package:flutter/foundation.dart'; // เพิ่มสำหรับ kIsWeb
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'firebase_options_web.dart';
 import 'controllers/auth_controller.dart';
 import 'models/user_model.dart';
 import 'screens/home_screen.dart';
@@ -15,22 +16,6 @@ void main() {
 class ColdTrackApp extends StatelessWidget {
   const ColdTrackApp({super.key});
 
-  // กำหนดฟังก์ชันเริ่มต้น Firebase ให้รองรับทั้ง Web และ Android
-  Future<FirebaseApp> _initFirebase() async {
-    if (kIsWeb) {
-      return await Firebase.initializeApp(
-        options: const FirebaseOptions(
-          apiKey: "AIzaSy...", // ค่า Web API Key จาก Firebase Console
-          appId: "1:xxx:web:xxx",
-          messagingSenderId: "xxx",
-          projectId: "exam-6-xxx",
-        ),
-      );
-    }
-    // สำหรับ Android จะอ่าน google-services.json อัตโนมัติ
-    return await Firebase.initializeApp();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +23,10 @@ class ColdTrackApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.cyan, useMaterial3: true),
       home: FutureBuilder(
-        future: _initFirebase(),
+        // Web ต้องใช้ options (ไม่มี google-services.json) / Android ใช้ google-services.json
+        future: kIsWeb
+            ? Firebase.initializeApp(options: webFirebaseOptions)
+            : Firebase.initializeApp(),
         builder: (context, snap) {
           if (snap.hasError) {
             return Scaffold(body: Center(child: Text('Firebase error: ${snap.error}')));
@@ -53,6 +41,7 @@ class ColdTrackApp extends StatelessWidget {
   }
 }
 
+/// ตรวจสถานะล็อกอิน: ยังไม่ล็อกอิน -> Login / ล็อกอินแล้ว -> โหลด role แล้วเข้า Home
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 

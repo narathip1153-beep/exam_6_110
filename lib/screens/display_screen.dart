@@ -49,7 +49,8 @@ class DisplayScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 12)),
               ),
               title: Text(c.containerId),
-              subtitle: Text('${c.productType}\nเหลือ ${c.remainingHours} ชั่วโมง'),
+              subtitle: Text('${c.productType}\nเหลือ ${c.remainingHours} ชั่วโมง'
+                  '${c.route.isEmpty ? '' : '\nเส้นทาง: ${c.route}'}'),
               isThreeLine: true,
               // Operator: ซ่อนปุ่ม Edit/Delete ทั้งหมด
               trailing: user.isAdmin

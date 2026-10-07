@@ -7,6 +7,7 @@ class ContainerModel {
   final String qaEmail;
   final double upperTempLimit;
   final double remainingHours;
+  final String route;
 
   ContainerModel({
     this.id,
@@ -15,6 +16,7 @@ class ContainerModel {
     required this.qaEmail,
     required this.upperTempLimit,
     required this.remainingHours,
+    this.route = '',
   });
 
   Map<String, dynamic> toMap() => {
@@ -23,6 +25,7 @@ class ContainerModel {
         'qaEmail': qaEmail,
         'upperTempLimit': upperTempLimit,
         'remainingHours': remainingHours,
+        'route': route,
       };
 
   factory ContainerModel.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -34,6 +37,7 @@ class ContainerModel {
       qaEmail: d['qaEmail'] ?? '',
       upperTempLimit: (d['upperTempLimit'] ?? 0).toDouble(),
       remainingHours: (d['remainingHours'] ?? 0).toDouble(),
+      route: d['route'] ?? '',
     );
   }
 }
